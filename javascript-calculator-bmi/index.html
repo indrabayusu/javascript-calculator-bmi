@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kalkulator BMI</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+        body {
+            background-color: #0F172A;
+            font-family: Arial, sans-serif;
+        }
+
+        .container {
+            max-width: 40%;
+        }
+
+        @media screen and (max-width: 600px) {
+            .container {
+                max-width: 90%;
+            }
+        }
+
+        .about-box, .calculator-box, .result-box, .info-box {
+            background-color: #ffffff;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .calculator-box input[type="number"] {
+            transition: border-color 0.3s ease;
+        }
+
+        .calculator-box button {
+            transition: background-color 0.3s ease;
+        }
+
+        .icon {
+            margin-right: 10px;
+        }
+
+        .result-box, .info-box {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <button id="backButton" onclick="window.location.href='../../../index.html#portfolio'" class="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded absolute left-4 top-3">
+        Back
+    </button>
+    <div class="container mx-auto p-4">
+        <h1 class="text-3xl text-white font-semibold text-center mb-4"><i class="fas fa-calculator icon"></i>Kalkulator BMI</h1>
+
+        <div class="about-box mb-2">
+            <h2 class="text-lg text-center font-medium pb-4"><i class="fas fa-info-circle icon"></i>Informasi</h2>
+            <p class="text-justify">Kalkulator BMI (Indeks Massa Tubuh) digunakan untuk mengukur proporsi berat badan terhadap tinggi badan. Alat ini membantu menilai apakah berat badan Anda berada dalam kisaran yang sehat.</p>
+            <h2 class="text-lg font-medium mt-4">Rentang Kategori BMI:</h2>
+            <ul class="list-disc list-inside">
+                <li><strong>Kurus:</strong> BMI kurang dari 18.5</li>
+                <li><strong>Normal:</strong> BMI antara 18.5 dan 24.9</li>
+                <li><strong>Gemuk:</strong> BMI antara 25 dan 29.9</li>
+                <li><strong>Obesitas:</strong> BMI 30 atau lebih</li>
+            </ul>
+        </div>
+
+        <div class="calculator-box">
+            <div class="mb-4">
+                <label for="weight" class="text-md font-medium"><i class="fas fa-weight icon"></i>Berat Badan (kg):</label>
+                <input type="number" id="weight" class="w-full mt-1 py-2 px-3 border border-blue-400 focus:border-blue-600 rounded-md" placeholder="Masukkan berat badan">
+            </div>
+
+            <div class="mb-4">
+                <label for="height" class="text-md font-medium"><i class="fas fa-ruler icon"></i>Tinggi Badan (cm):</label>
+                <input type="number" id="height" class="w-full mt-1 py-2 px-3 border border-blue-400 focus:border-blue-600 rounded-md" placeholder="Masukkan tinggi badan">
+            </div>
+
+            <button id="calculate" class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600">
+                <i class="fas fa-calculator icon"></i> Hitung BMI
+            </button>
+            
+            <button id="reset" class="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600 ml-2 float-right">
+                <i class="fas fa-undo icon"></i> Reset
+            </button>
+
+            <div id="alert" class="alert hidden mt-3 p-3 text-center text-white bg-red-500 rounded-md">Harap isi semua kolom dengan nilai yang valid.</div>
+        </div>
+
+        <div class="result-box mt-4" id="result"></div>
+        <div class="info-box mt-4" id="info"></div>
+    </div>
+
+    <footer class="text-center text-white mt-3 mb-3">
+        Created by indrabayusu.
+    </footer>
+
+    <script>
+        document.getElementById('calculate').addEventListener('click', function() {
+            const weight = parseFloat(document.getElementById('weight').value);
+            const height = parseFloat(document.getElementById('height').value) / 100; 
+
+            if (isNaN(weight) || isNaN(height) || weight <= 0 || height <= 0) {
+                const alertElement = document.getElementById('alert');
+                alertElement.textContent = 'Isi semua kolom dengan nilai yang valid.';
+                alertElement.style.display = 'block';
+                return;
+            }
+
+            const bmi = weight / (height * height);
+            
+            let category = '';
+            if (bmi < 18.5) {
+                category = 'Kurus';
+            } else if (bmi < 24.9) {
+                category = 'Normal';
+            } else if (bmi < 29.9) {
+                category = 'Gemuk';
+            } else {
+                category = 'Obesitas';
+            }
+            
+            const resultElement = document.getElementById('result');
+            resultElement.innerHTML = `
+                <p class="text-xl font-semibold">BMI Anda: ${bmi.toFixed(2)}</p>
+                <p class="text-lg mt-2">Kategori: ${category}</p>
+                <p class="text-md mt-4"><strong>Cara Perhitungan:</strong></p>
+                <p class="mt-2">BMI (Indeks Massa Tubuh) dihitung dengan rumus berikut:</p>
+                <p class="mt-2 text-center"><code>Berat Badan (kg) / (Tinggi Badan (m) * Tinggi Badan (m))</code></p>
+                <p class="mt-4"><strong>Proses Perhitungan Anda:</strong></p>
+                <p class="mt-2">Berat Badan: ${weight} kg</p>
+                <p class="mt-2">Tinggi Badan: ${height} m</p>
+                <p class="mt-2">BMI = ${weight} / (${height} * ${height}) = ${bmi.toFixed(2)}</p>
+            `;
+
+            const infoElement = document.getElementById('info');
+            let info = '';
+                    
+            if (category === 'Kurus') {
+                info = 'Anda termasuk dalam kategori kurus. Ini mengindikasikan bahwa proporsi berat badan Anda terhadap tinggi badan Anda mungkin kurang dari yang seharusnya. Untuk memperbaiki hal ini, sangat disarankan untuk meningkatkan asupan makanan yang bergizi dengan memilih makanan seimbang yang mengandung protein, karbohidrat, lemak sehat, vitamin, dan mineral. Memiliki pola makan yang seimbang akan membantu Anda mendapatkan berat badan yang sehat. Selain itu, olahraga rutin juga penting untuk meningkatkan massa tubuh Anda dan memperbaiki kondisi fisik secara keseluruhan.';
+            } else if (category === 'Normal') {
+                info = 'Anda berada dalam kategori berat badan normal. Tanda baik untuk kesehatan Anda. Tetaplah mempertahankan pola makan sehat dengan memilih beragam makanan yang memberikan nutrisi yang dibutuhkan tubuh Anda. Rutin berolahraga adalah cara yang baik untuk menjaga kesehatan tubuh Anda. Anda bisa mempertimbangkan untuk mencoba berbagai jenis olahraga yang Anda nikmati, seperti berjalan, berlari, berenang, atau yoga. Ini akan membantu Anda tetap aktif dan kuat.';
+            } else if (category === 'Gemuk') {
+                info = 'Anda termasuk dalam kategori gemuk. Penting untuk mengambil langkah-langkah dalam mengendalikan berat badan Anda. Pertama, perhatikan asupan kalori Anda dengan membatasi makanan tinggi lemak dan gula. Prioritaskan konsumsi makanan yang kaya serat, buah-buahan, sayuran, dan protein tanpa lemak. Selain itu, tingkatkan aktivitas fisik Anda. Olahraga secara teratur akan membantu membakar kalori berlebih dan meningkatkan kebugaran. Jika Anda merasa kesulitan dalam mengelola berat badan, pertimbangkan untuk berkonsultasi dengan dokter atau ahli gizi yang dapat memberikan panduan khusus sesuai kebutuhan Anda.';
+            } else if (category === 'Obesitas') {
+                info = 'Anda mengalami obesitas. Ini adalah kondisi yang memerlukan perhatian khusus terhadap kesehatan Anda. Segera konsultasikan dengan dokter atau ahli gizi yang dapat memberikan panduan yang tepat. Mereka akan membantu Anda merancang rencana perubahan gaya hidup yang sehat dan diet yang lebih seimbang. Penting untuk mengambil langkah-langkah konkret dalam mengurangi berat badan Anda untuk mengurangi risiko masalah kesehatan yang terkait dengan obesitas. Olahraga secara teratur, mengontrol asupan kalori, dan memperhatikan pola makan adalah langkah awal yang sangat penting untuk mencapai tujuan kesehatan Anda.';
+            } else {
+                info = 'Tidak ada informasi yang tersedia.';
+            }
+            
+            infoElement.innerHTML = `
+                <p class="text-lg font-semibold">Saran Kesehatan:</p>
+                <p class="mt-2 text-justify">${info}</p>
+            `;
+
+            resultElement.style.display = 'block';
+            infoElement.style.display = 'block';
+
+            const alertElement = document.getElementById('alert');
+            alertElement.style.display = 'none';
+        });
+
+        document.getElementById('reset').addEventListener('click', function() {
+            // Reset input fields and hide results
+            document.getElementById('weight').value = '';
+            document.getElementById('height').value = '';
+            document.getElementById('result').style.display = 'none';
+            document.getElementById('info').style.display = 'none';
+            document.getElementById('alert').style.display = 'none';
+        });
+    </script>
+</body>
+</html>
